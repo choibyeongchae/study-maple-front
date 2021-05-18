@@ -13,6 +13,7 @@ import com.maple.front.util.DateEntityUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
@@ -20,6 +21,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name="member")
 @Builder
+@Data
 @SequenceGenerator(name = "member_seq", sequenceName = "member_seq", initialValue = 1, allocationSize = 1)
 public class Member extends DateEntityUtil{
 
@@ -51,7 +53,7 @@ public class Member extends DateEntityUtil{
 	
 	@ApiModelProperty(value = "회원포인트")
 	@Column(name = "mbr_point")
-	private String mbrpoint;
+	private Integer mbrpoint;
 	
 	@ApiModelProperty(value = "주소")
 	@Column(name = "address")
