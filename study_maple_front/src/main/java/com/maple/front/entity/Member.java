@@ -1,5 +1,8 @@
 package com.maple.front.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -62,4 +65,10 @@ public class Member extends DateEntityUtil{
 	@ApiModelProperty(value = "role")
 	@Column(name="roles")
 	private String roles;
+	
+	public List<String> getRoleList() {
+		List<String> roleList = new ArrayList<String>();
+		roleList.add("ROLE_USER");
+		return roleList;
+	}
 }

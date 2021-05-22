@@ -7,5 +7,6 @@ import com.maple.front.entity.Member;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Integer>{
-
+	
+	Member findByEmail(String email);
 }
