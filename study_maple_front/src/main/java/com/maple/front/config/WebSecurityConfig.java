@@ -11,6 +11,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import com.maple.front.filter.JwtAuthenticationFilter;
 import com.maple.front.filter.JwtAuthorizationFilter;
+import com.maple.front.repository.MemberRefreshRepository;
 import com.maple.front.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	private final CorsFilter corsFilter;
 	private final MemberRepository memberRepository;
+	private final MemberRefreshRepository memberRefreshRepository;
 	
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
@@ -38,10 +40,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		.addFilter(corsFilter)
 		.formLogin().disable() // form login 사용안함
 		.httpBasic().disable()
-		.addFilter(new JwtAuthenticationFilter(authenticationManager(),memberRepository))
-		.addFilter(new JwtAuthorizationFilter(authenticationManager(),memberRepository))
+		.addFilter(new JwtAuthenticationFilter(authenticationManager(), memberRefreshRepository))
+		.addFilter(new JwtAuthorizationFilter(authenticationManager(), memberRepository, memberRefreshRepository))
 		.authorizeRequests()
-		.antMatchers("*")
+		.antMatchers("/member/mypage/*").authenticated()
+		.anyRequest()
 		.permitAll();
 		
 	}

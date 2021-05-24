@@ -2,6 +2,7 @@ package com.maple.front.filter;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Optional;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -20,16 +21,19 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.maple.front.config.PrincipalDetails;
 import com.maple.front.entity.Member;
+import com.maple.front.entity.MemberRefreshToken;
+import com.maple.front.repository.MemberRefreshRepository;
 import com.maple.front.repository.MemberRepository;
 import com.maple.front.util.ConstantUtil;
+import com.maple.front.util.PrincipalDetailUtil;
 import com.maple.front.util.StringUtil;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
 	private MemberRepository memberRepository;
-	private Authentication auth;
+	private MemberRefreshRepository memberRefreshRepository;
 	
-	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, MemberRepository memberRepository) {
+	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, MemberRepository memberRepository, MemberRefreshRepository memberRefreshRepository) {
 		super(authenticationManager);
 		this.memberRepository = memberRepository;
 	}
@@ -39,41 +43,26 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 			throws IOException, ServletException {
 		
 		String refreshToken = "";
-		
+
 		try {
 			Cookie[] cookieList = request.getCookies();
-			String token = "";
 			String accessToken = "";
 			if (cookieList != null && cookieList.length > 0) {
 				for (Cookie cookie : cookieList) {
 					if (cookie.getName().equals(ConstantUtil.ACCESS_TOKEN_NAME)) {
 						accessToken = cookie.getValue();
-					} else if (cookie.getName().equals(ConstantUtil.REFRESH_TOKEN_NAME)) {
-						// redis -> get
-						refreshToken = cookie.getValue();
 					}
 				}
 			}
-			//header 확인
 			
 			if (StringUtil.isEmpty(accessToken) && StringUtil.isEmpty(refreshToken)) {
 				chain.doFilter(request, response);
 				return;
 			}
 			
-			// access token 없을시 refresh token으로
-			if (accessToken != null ) {
-				
-				token = accessToken;
-			} else {
-				if (refreshToken != null) {
-					token = refreshToken;
-				}
-			}
-			
 			String email = JWT.require(Algorithm.HMAC512("cos"))
 					.build()
-					.verify(token)
+					.verify(accessToken)
 					.getClaim("id")
 					.asString();
 			
@@ -83,59 +72,93 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 				PrincipalDetails principalDetails = new PrincipalDetails(member);
 				Authentication authentication = 
 						new UsernamePasswordAuthenticationToken(principalDetails, null,principalDetails.getAuthorities());
-	
 				
-				if (StringUtil.isEmpty(accessToken)) {
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+			}
+
+			chain.doFilter(request, response);
+		} catch(TokenExpiredException e) {
+			PrincipalDetails principalDetail = PrincipalDetailUtil.principalDetails;
+			if (!StringUtil.isEmpty(principalDetail)) {
+				Optional<MemberRefreshToken> mbrRefresh = memberRefreshRepository.findByEmail(principalDetail.getMember().getEmail());
+
+				if (mbrRefresh.isPresent()) {
+					long expireTime = mbrRefresh.get().getExpireTime();
+					long now = System.currentTimeMillis();
+
+					if (expireTime > now) {
+						refreshToken = mbrRefresh.get().getToken();
+					} else {
+						String refreshJwtToken = JWT.create()
+								.withSubject(principalDetail.getUsername())
+								.withExpiresAt(new Date(System.currentTimeMillis()+(60000 * 60) * 24)) // 1day
+								.withClaim("id", principalDetail.getMember().getEmail())
+								.withClaim("username", principalDetail.getMember().getMbrnm())
+								.sign(Algorithm.HMAC512("cos"));
+						
+						// redis 저장
+						MemberRefreshToken mbrRefreshToken = MemberRefreshToken.builder()
+								.email(principalDetail.getMember().getEmail())
+								.token(refreshJwtToken)
+								.expireTime(System.currentTimeMillis() + (60000 * 60) * 24)
+								.build();
+						
+						memberRefreshRepository.save(mbrRefreshToken);
+						
+						refreshToken = refreshJwtToken;
+					}
+
+				} else {
+					String refreshJwtToken = JWT.create()
+							.withSubject(principalDetail.getUsername())
+							.withExpiresAt(new Date(System.currentTimeMillis()+(60000 * 60) * 24)) // 1day
+							.withClaim("id", principalDetail.getMember().getEmail())
+							.withClaim("username", principalDetail.getMember().getMbrnm())
+							.sign(Algorithm.HMAC512("cos"));
+					
+					// redis 저장
+					MemberRefreshToken mbrRefreshToken = MemberRefreshToken.builder()
+							.email(principalDetail.getMember().getEmail())
+							.token(refreshJwtToken)
+							.expireTime(System.currentTimeMillis() + (60000 * 60) * 24)
+							.build();
+					
+					memberRefreshRepository.save(mbrRefreshToken);
+					
+					refreshToken = refreshJwtToken;
+
+				}
+				
+				// access token 만료의 경우
+				String email = JWT.require(Algorithm.HMAC512("cos"))
+						.build()
+						.verify(refreshToken)
+						.getClaim("id")
+						.asString();
+				
+				if (!StringUtil.isEmpty(email)) {
+					Member member = memberRepository.findByEmail(email);
+					
+					PrincipalDetails principalDetails = new PrincipalDetails(member);
+					Authentication authentication = 
+							new UsernamePasswordAuthenticationToken(principalDetails, null,principalDetails.getAuthorities());
+	
+					// access token 재발급
 					String jwtToken = JWT.create()
 							.withSubject(principalDetails.getUsername())
 							.withExpiresAt(new Date(System.currentTimeMillis()+(60000 * 10))) // 10분
 							.withClaim("id", principalDetails.getMember().getEmail())
 							.withClaim("username", principalDetails.getMember().getMbrnm())
 							.sign(Algorithm.HMAC512("cos"));
-	
-					// access token 재발급
+		
 					Cookie cookie = new Cookie(ConstantUtil.ACCESS_TOKEN_NAME,jwtToken);
 					cookie.setHttpOnly(true);
 					response.addCookie(cookie);
-				
+					
+					SecurityContextHolder.getContext().setAuthentication(authentication);
 				}
-				
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-				
 			}
-			chain.doFilter(request, response);
-	
-		} catch(TokenExpiredException e) {
-			
-			// access token 만료의 경우
-			String email = JWT.require(Algorithm.HMAC512("cos"))
-					.build()
-					.verify(refreshToken)
-					.getClaim("id")
-					.asString();
-			
-			if (!StringUtil.isEmpty(email)) {
-				Member member = memberRepository.findByEmail(email);
-				
-				PrincipalDetails principalDetails = new PrincipalDetails(member);
-				Authentication authentication = 
-						new UsernamePasswordAuthenticationToken(principalDetails, null,principalDetails.getAuthorities());
-	
 
-				// access token 재발급
-				String jwtToken = JWT.create()
-						.withSubject(principalDetails.getUsername())
-						.withExpiresAt(new Date(System.currentTimeMillis()+(60000 * 10))) // 10분
-						.withClaim("id", principalDetails.getMember().getEmail())
-						.withClaim("username", principalDetails.getMember().getMbrnm())
-						.sign(Algorithm.HMAC512("cos"));
-	
-				Cookie cookie = new Cookie(ConstantUtil.ACCESS_TOKEN_NAME,jwtToken);
-				cookie.setHttpOnly(true);
-				response.addCookie(cookie);
-				
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-			}
 			chain.doFilter(request, response);
  		}
 	}
