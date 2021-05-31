@@ -46,12 +46,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 				
 			// user info check
 			UsernamePasswordAuthenticationToken authenticationToken =
-					new UsernamePasswordAuthenticationToken(mbr.getEmail(), mbr.getPassword());
+					new UsernamePasswordAuthenticationToken(mbr.getMbr_email(), mbr.getMbr_pass());
 				
 			//PrincipalDetailService의 loadUserByName함수 실행
 			Authentication authentication =
 					authenticationManager.authenticate(authenticationToken);
-				
+			// 회원정보get
 			PrincipalDetails principalDetails = (PrincipalDetails)authentication.getPrincipal();
 			
 			// static save
@@ -68,6 +68,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
 		
+		// 회원정보 취득
 		PrincipalDetails principalDetails = (PrincipalDetails)authResult.getPrincipal();
 		
 		// Hash암호 방식
@@ -75,8 +76,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		String jwtToken = JWT.create()
 				.withSubject(principalDetails.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis()+(60000 * 10))) // 10분
-				.withClaim("id", principalDetails.getMember().getEmail())
-				.withClaim("username", principalDetails.getMember().getMbrnm())
+				.withClaim("id", principalDetails.getMember().getMbr_email())
+				.withClaim("username", principalDetails.getMember().getMbr_name())
 				.sign(Algorithm.HMAC512("cos"));
 		
 		Cookie accessToken = new Cookie(ConstantUtil.ACCESS_TOKEN_NAME, jwtToken);
@@ -86,7 +87,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		String refreshToken = "";
 		
 		//redis search
-		Optional<MemberRefreshToken> mbrToken = memberRefreshRepository.findByEmail(principalDetails.getMember().getEmail());
+		Optional<MemberRefreshToken> mbrToken = memberRefreshRepository.findByEmail(principalDetails.getMember().getMbr_email());
 
 		if (mbrToken.isPresent()) {  // -> not null
 			long expireTime = mbrToken.get().getExpireTime();
@@ -101,13 +102,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			String refreshJwtToken = JWT.create()
 					.withSubject(principalDetails.getUsername())
 					.withExpiresAt(new Date(System.currentTimeMillis()+(60000 * 60) * 24)) // 1day
-					.withClaim("id", principalDetails.getMember().getEmail())
-					.withClaim("username", principalDetails.getMember().getMbrnm())
+					.withClaim("id", principalDetails.getMember().getMbr_email())
+					.withClaim("username", principalDetails.getMember().getMbr_name())
 					.sign(Algorithm.HMAC512("cos"));
 			
 			// redis 저장
 			MemberRefreshToken mbrRefreshToken = MemberRefreshToken.builder()
-					.email(principalDetails.getMember().getEmail())
+					.email(principalDetails.getMember().getMbr_email())
 					.token(refreshJwtToken)
 					.expireTime(System.currentTimeMillis() + (60000 * 60) * 24)
 					.build();

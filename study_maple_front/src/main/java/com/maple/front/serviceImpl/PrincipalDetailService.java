@@ -24,8 +24,8 @@ public class PrincipalDetailService implements UserDetailsService{
 		Member member = memberRepository.findByEmail(username);
 		if (member == null) {
 			Member loadUserByUsername = new Member();
-			loadUserByUsername.setEmail(username);
-			loadUserByUsername.setPassword("");
+			loadUserByUsername.setMbr_email(username);
+			loadUserByUsername.setMbr_pass("");
 			return new PrincipalDetails(loadUserByUsername);
 		}
 		return new PrincipalDetails(member);

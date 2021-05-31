@@ -31,13 +31,13 @@ public class PrincipalDetails implements UserDetails{
 	@Override
 	public String getPassword() {
 		// TODO Auto-generated method stub
-		return member.getPassword();
+		return member.getMbr_pass();
 	}
 
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
-		return member.getEmail();
+		return member.getMbr_email();
 	}
 
 	@Override
