@@ -58,12 +58,5 @@ public class MainBoard extends DateEntityUtil implements Serializable{
 	@Column(name="boader_viewcnt")
 	private String boader_viewcnt;
 	
-	@ApiModelProperty(value = "게시판 등록일자")
-	@Column(name="regdate")
-	private Date regdate;
-	
-	@ApiModelProperty(value = "게시판 수정일자")
-	@Column(name="upddate")
-	private Date upddate;
 	
 }

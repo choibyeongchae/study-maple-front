@@ -58,11 +58,4 @@ public class MainBenner extends DateEntityUtil implements Serializable{
 	@Column(name="banner_restype")
 	private String banner_restype;
 	
-	@ApiModelProperty(value = "메인베너등록일자")
-	@Column(name = "regdate")
-	private Date regdate;
-	
-	@ApiModelProperty(value = "메인베너 수정일자")
-	@Column(name = "upddate")
-	private Date upddate;
 }

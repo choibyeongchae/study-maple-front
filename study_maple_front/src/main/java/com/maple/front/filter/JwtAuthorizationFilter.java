@@ -22,20 +22,21 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.maple.front.config.PrincipalDetails;
 import com.maple.front.entity.Member;
 import com.maple.front.entity.MemberRefreshToken;
+import com.maple.front.entity.QMember;
 import com.maple.front.repository.MemberRefreshRepository;
-import com.maple.front.repository.MemberRepository;
 import com.maple.front.util.ConstantUtil;
 import com.maple.front.util.PrincipalDetailUtil;
 import com.maple.front.util.StringUtil;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-	private MemberRepository memberRepository;
+	private JPAQueryFactory queryFactory;
 	private MemberRefreshRepository memberRefreshRepository;
 	
-	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, MemberRepository memberRepository, MemberRefreshRepository memberRefreshRepository) {
+	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JPAQueryFactory queryFactory, MemberRefreshRepository memberRefreshRepository) {
 		super(authenticationManager);
-		this.memberRepository = memberRepository;
+		this.queryFactory = queryFactory;
 	}
 	
 	// 요청이 될때마다 실행
@@ -44,7 +45,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 			throws IOException, ServletException {
 		
 		String refreshToken = "";
-
+		QMember qMember = QMember.member;
 		try {
 			Cookie[] cookieList = request.getCookies();
 			String accessToken = "";
@@ -69,8 +70,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 					.asString();
 			
 			if (email != null) {
-				Member member = memberRepository.findByEmail(email);
-				
+				//Member member = memberRepository.findByEmail(email);
+				Member member = queryFactory.selectFrom(qMember).where(qMember.mbr_email.eq(email)).fetchFirst();
 				PrincipalDetails principalDetails = new PrincipalDetails(member);
 				Authentication authentication = 
 						new UsernamePasswordAuthenticationToken(principalDetails, null,principalDetails.getAuthorities());
@@ -140,7 +141,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 						.asString();
 				
 				if (!StringUtil.isEmpty(email)) {
-					Member member = memberRepository.findByEmail(email);
+					Member member = queryFactory.select(qMember).where(qMember.mbr_email.eq(email)).fetchFirst();
 					
 					PrincipalDetails principalDetails = new PrincipalDetails(member);
 					Authentication authentication = 

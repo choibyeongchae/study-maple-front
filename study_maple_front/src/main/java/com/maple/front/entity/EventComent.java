@@ -46,11 +46,4 @@ public class EventComent extends DateEntityUtil implements Serializable{
 	@Column(name="even_coments")
 	private String even_coments;
 	
-	@ApiModelProperty(value = "댓글 등록일자")
-	@Column(name = "regdate")
-	private Date regdate;
-	
-	@ApiModelProperty(value = "댓글 수정일자")
-	@Column(name = "upddate")
-	private Date upddate;
 }

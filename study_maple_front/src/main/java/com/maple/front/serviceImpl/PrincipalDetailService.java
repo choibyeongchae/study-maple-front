@@ -8,20 +8,23 @@ import org.springframework.stereotype.Service;
 
 import com.maple.front.config.PrincipalDetails;
 import com.maple.front.entity.Member;
+import com.maple.front.entity.QMember;
 import com.maple.front.repository.MemberRepository;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class PrincipalDetailService implements UserDetailsService{
-
+	
 	@Autowired
-	private MemberRepository memberRepository;
+	private JPAQueryFactory queryFactory;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Member member = memberRepository.findByEmail(username);
+		QMember qMember = QMember.member;
+		Member member = queryFactory.selectFrom(qMember).where(qMember.mbr_email.eq(username)).fetchFirst();
 		if (member == null) {
 			Member loadUserByUsername = new Member();
 			loadUserByUsername.setMbr_email(username);

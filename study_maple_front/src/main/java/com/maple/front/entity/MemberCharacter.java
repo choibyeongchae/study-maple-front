@@ -54,11 +54,4 @@ public class MemberCharacter extends DateEntityUtil implements Serializable{
 	@Column(name="cha_server")
 	private String cha_server;
 	
-	@ApiModelProperty(value = "캐릭터 등록일자")
-	@Column(name="regdate")
-	private Date regdate;
-	
-	@ApiModelProperty(value = "캐릭터 수정일자")
-	@Column(name="upddate")
-	private Date upddate;
 }

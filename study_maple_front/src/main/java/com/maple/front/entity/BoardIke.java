@@ -45,12 +45,4 @@ public class BoardIke extends DateEntityUtil implements Serializable{
 	@ApiModelProperty(value = "회원이메일")
 	@Column(name="mbr_email")
 	private String mbr_email;
-	
-	@ApiModelProperty(value = "공감 등록일자")
-	@Column(name="regdate")
-	private Date regdate;
-	
-	@ApiModelProperty(value = "공감 수정일자")
-	@Column(name="upddate")
-	private Date upddate;
 }

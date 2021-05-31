@@ -66,11 +66,5 @@ public class EventMaster extends DateEntityUtil implements Serializable{
 	@Column(name="even_viewcnt")
 	private String even_viewcnt;
 	
-	@ApiModelProperty(value = "이벤트 등록일자")
-	@Column(name="regdate")
-	private Date regdate;
-	
-	@ApiModelProperty(value = "이벤트 수정일자")
-	@Column(name="upddate")
-	private Date upddate;
+ 
 }

@@ -50,12 +50,4 @@ public class BoardComents extends DateEntityUtil implements Serializable{
 	@Column(name="com_contents")
 	private String com_contents;
 	
-	@ApiModelProperty(value = "게시판 등록일자")
-	@Column(name="regdate")
-	private Date regdate;
-	
-	@ApiModelProperty(value = "게시판 수정일자")
-	@Column(name="upddate")
-	private Date upddate;
-	
 }

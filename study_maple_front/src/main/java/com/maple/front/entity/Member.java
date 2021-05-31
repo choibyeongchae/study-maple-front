@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="member")
+@Table(name="member_information")
 @Builder
 @Data
 @SequenceGenerator(name = "member_seq", sequenceName = "member_seq", initialValue = 1, allocationSize = 1)
@@ -67,13 +67,6 @@ public class Member extends DateEntityUtil{
 	@Column(name = "mbr_zip")
 	private String mbr_zip;
 	
-	@ApiModelProperty(value = "회원등록일")
-	@Column(name = "regdate")
-	private Date regdate;
-	
-	@ApiModelProperty(value = "회원수정일")
-	@Column(name = "upddate")
-	private Date upddate;
 	
 	public List<String> getRoleList() {
 		List<String> roleList = new ArrayList<String>();

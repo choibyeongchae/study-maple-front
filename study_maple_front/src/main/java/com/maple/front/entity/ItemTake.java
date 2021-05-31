@@ -42,11 +42,4 @@ public class ItemTake extends DateEntityUtil implements Serializable{
 	@Column(name="mbr_email")
 	private String mbr_email;
 	
-	@ApiModelProperty(value = "착용아이템 등록일자")
-	@Column(name="regdate")
-	private Date regdate;
-	
-	@ApiModelProperty(value = "착용아이템 수정일자")
-	@Column(name="upddate")
-	private Date upddate;
 }

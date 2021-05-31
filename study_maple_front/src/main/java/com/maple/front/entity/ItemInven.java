@@ -53,13 +53,5 @@ public class ItemInven  extends DateEntityUtil implements Serializable{
 	@ApiModelProperty(value = "회원이메일")
 	@Column(name="mbr_email")
 	private String mbr_email;
-	
-	@ApiModelProperty(value = "등록아이템일자")
-	@Column(name="regdate")
-	private Date regdate;
-	
-	@ApiModelProperty(value = "수정아이템일자")
-	@Column(name="upddate")
-	private Date upddate;
 
 }
