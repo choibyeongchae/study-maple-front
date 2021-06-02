@@ -25,11 +25,9 @@ import lombok.NoArgsConstructor;
 @Table(name="ItemTake")
 @Builder
 @Data
-@SequenceGenerator(name = "caharacter_name", sequenceName = "caharacter_name", initialValue = 1, allocationSize = 1)
 public class ItemTake extends DateEntityUtil implements Serializable{
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "caharacter_name")
 	@ApiModelProperty(value = "캐릭터명")
 	@Column(name = "caharacter_name")
 	private String caharacter_name;
