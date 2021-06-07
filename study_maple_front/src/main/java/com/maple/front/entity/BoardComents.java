@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="BoardComents")
+@Table(name="board_coments")
 @Builder
 @Data
 @SequenceGenerator(name = "coment_seq", sequenceName = "coment_seq", initialValue = 1, allocationSize = 1)

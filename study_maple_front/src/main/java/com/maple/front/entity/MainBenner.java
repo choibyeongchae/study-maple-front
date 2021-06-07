@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="MainBenner")
+@Table(name="main_benner")
 @Builder
 @Data
 @SequenceGenerator(name = "benner_seq", sequenceName = "benner_seq", initialValue = 1, allocationSize = 1)

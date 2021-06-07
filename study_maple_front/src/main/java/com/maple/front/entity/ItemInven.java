@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="ItemInven")
+@Table(name="item_inven")
 @Builder
 @Data
 @SequenceGenerator(name = "iven_seq", sequenceName = "iven_seq", initialValue = 1, allocationSize = 1)

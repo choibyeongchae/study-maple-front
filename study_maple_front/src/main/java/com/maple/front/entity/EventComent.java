@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="EventComent")
+@Table(name="event_coment")
 @Builder
 @Data
 @SequenceGenerator(name = "even_op", sequenceName = "even_op", initialValue = 1, allocationSize = 1)

@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="BoardIke")
+@Table(name="board_like")
 @Builder
 @Data
 @SequenceGenerator(name = "history_seq", sequenceName = "history_seq", initialValue = 1, allocationSize = 1)

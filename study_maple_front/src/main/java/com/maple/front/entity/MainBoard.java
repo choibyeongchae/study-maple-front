@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="MainBoard")
+@Table(name="main_board")
 @Builder
 @Data
 @SequenceGenerator(name = "boader_seq", sequenceName = "boader_seq", initialValue = 1, allocationSize = 1)

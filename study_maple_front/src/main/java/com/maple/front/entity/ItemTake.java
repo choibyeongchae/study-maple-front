@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="ItemTake")
+@Table(name="item_take")
 @Builder
 @Data
 public class ItemTake extends DateEntityUtil implements Serializable{
