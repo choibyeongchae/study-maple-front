@@ -14,15 +14,6 @@ CREATE SEQUENCE maple.board_seq
 	CACHE 1
 	NO CYCLE;
 	
-CREATE SEQUENCE maple.caharacter_name
-	INCREMENT BY 1
-	MINVALUE 1
-	MAXVALUE 9223372036854775807
-	START 1
-	CACHE 1
-	NO CYCLE;
-	
-	
 CREATE SEQUENCE maple.coment_seq
 	INCREMENT BY 1
 	MINVALUE 1
@@ -70,19 +61,7 @@ CREATE SEQUENCE maple.mbr_no
 	MAXVALUE 9223372036854775807
 	START 1
 	CACHE 1
-	NO CYCLE;	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	NO CYCLE;
+
 	
 	
