@@ -6,7 +6,7 @@ CREATE SEQUENCE maple.benner_seq
 	CACHE 1
 	NO CYCLE;
 	
-CREATE SEQUENCE maple.board_seq
+	CREATE SEQUENCE maple.board_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 9223372036854775807
@@ -14,7 +14,7 @@ CREATE SEQUENCE maple.board_seq
 	CACHE 1
 	NO CYCLE;
 	
-CREATE SEQUENCE maple.coment_seq
+	CREATE SEQUENCE maple.caharacter_name
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 9223372036854775807
@@ -22,46 +22,223 @@ CREATE SEQUENCE maple.coment_seq
 	CACHE 1
 	NO CYCLE;
 	
-	
-CREATE SEQUENCE maple.even_op
+	CREATE SEQUENCE maple.coment_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 9223372036854775807
 	START 1
 	CACHE 1
 	NO CYCLE;
+	
+	CREATE SEQUENCE maple.even_op
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+	
+	CREATE SEQUENCE maple.history_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+	
+	CREATE SEQUENCE maple.item_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+	
+	CREATE SEQUENCE maple.iven_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+	
+	CREATE SEQUENCE maple.mbr_no
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+	
+	CREATE SEQUENCE maple.member_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+	
+	CREATE TABLE maple.board_coments (
+	coment_seq numeric(10) NOT NULL,
+	boader_seq numeric(10) NOT NULL,
+	mbr_no numeric(10) NOT NULL DEFAULT nextval('maple.member_seq'::regclass),
+	mbr_email varchar(50) NOT NULL,
+	com_contents varchar(200) NOT NULL,
+	regdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	upddate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT pk_board_coments PRIMARY KEY (coment_seq, boader_seq, mbr_no, mbr_email)
+);
 
-CREATE SEQUENCE maple.history_seq
-	INCREMENT BY 1
-	MINVALUE 1
-	MAXVALUE 9223372036854775807
-	START 1
-	CACHE 1
-	NO CYCLE;
-	
-CREATE SEQUENCE maple.item_seq
-	INCREMENT BY 1
-	MINVALUE 1
-	MAXVALUE 9223372036854775807
-	START 1
-	CACHE 1
-	NO CYCLE;
+CREATE TABLE maple.board_like (
+	history_seq numeric(10) NOT NULL,
+	boader_seq numeric(10) NOT NULL,
+	mbr_no numeric(10) NOT NULL DEFAULT nextval('maple.member_seq'::regclass),
+	mbr_email varchar(50) NOT NULL,
+	regdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	upddate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT pk_board_like PRIMARY KEY (history_seq, boader_seq, mbr_no, mbr_email),
+	CONSTRAINT fk_main_board_to_board_like FOREIGN KEY (boader_seq, mbr_no, mbr_email) REFERENCES maple.main_board(boader_seq, mbr_no, mbr_email)
+);
 
-CREATE SEQUENCE maple.iven_seq
-	INCREMENT BY 1
-	MINVALUE 1
-	MAXVALUE 9223372036854775807
-	START 1
-	CACHE 1
-	NO CYCLE;
-	
-CREATE SEQUENCE maple.mbr_no
-	INCREMENT BY 1
-	MINVALUE 1
-	MAXVALUE 9223372036854775807
-	START 1
-	CACHE 1
-	NO CYCLE;
+CREATE TABLE maple.event_coment (
+	even_op numeric(10) NOT NULL,
+	mbr_no numeric(10) NOT NULL DEFAULT nextval('maple.member_seq'::regclass),
+	mbr_email varchar(50) NOT NULL,
+	even_coments varchar(100) NOT NULL,
+	regdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	upddate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT pk_event_coment PRIMARY KEY (even_op, mbr_no, mbr_email),
+	CONSTRAINT fk_event_master_to_event_coment FOREIGN KEY (even_op) REFERENCES maple.event_master(even_op),
+	CONSTRAINT fk_member_information_to_event_coment FOREIGN KEY (mbr_no, mbr_email) REFERENCES maple.member_information(mbr_no, mbr_email)
+);
 
-	
-	
+CREATE TABLE maple.event_master (
+	even_op numeric(10) NOT NULL,
+	even_code varchar(20) NOT NULL,
+	even_name varchar(20) NOT NULL,
+	even_stardate timestamp NOT NULL,
+	even_enddate timestamp NOT NULL,
+	even_title varchar(20) NOT NULL,
+	even_contents varchar(20) NOT NULL,
+	even_coment varchar(100) NULL,
+	even_viewcnt numeric(100) NOT NULL DEFAULT 0,
+	regdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	upddate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT pk_event_master PRIMARY KEY (even_op)
+);
+
+CREATE TABLE maple.item_inven (
+	iven_seq numeric(10) NOT NULL,
+	caharacter_name varchar(15) NOT NULL,
+	item_seq numeric(10) NOT NULL,
+	item_type varchar(30) NOT NULL,
+	mbr_no numeric(10) NOT NULL DEFAULT nextval('maple.member_seq'::regclass),
+	mbr_email varchar(50) NOT NULL,
+	regdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	upddate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT pk_item_inven PRIMARY KEY (iven_seq, caharacter_name, item_seq, item_type, mbr_no, mbr_email),
+	CONSTRAINT fk_item_master_to_item_inven_1 FOREIGN KEY (item_seq, item_type) REFERENCES maple.item_master(item_seq, item_type),
+	CONSTRAINT fk_member_character_to_item_inven FOREIGN KEY (caharacter_name, mbr_no, mbr_email) REFERENCES maple.member_character(caharacter_name, mbr_no, mbr_email)
+);
+
+CREATE TABLE maple.item_master (
+	item_seq numeric(10) NOT NULL,
+	item_type varchar(30) NOT NULL,
+	item_name varchar(30) NOT NULL,
+	item_desc varchar(3000) NOT NULL,
+	item_takelevel varchar(30) NOT NULL,
+	item_job varchar(30) NOT NULL,
+	item_str varchar(5) NULL,
+	item_dex varchar(5) NULL,
+	item_int varchar(5) NULL,
+	item_luk varchar(5) NULL,
+	item_strapos varchar(10) NULL,
+	item_ficat varchar(30) NOT NULL,
+	item_attack varchar(5) NULL,
+	item_mattack varchar(5) NULL,
+	item_upgarde varchar(5) NOT NULL,
+	regdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	upddate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT pk_item_master PRIMARY KEY (item_seq, item_type)
+);
+
+CREATE TABLE maple.item_take (
+	caharacter_name varchar(15) NOT NULL,
+	mbr_no numeric(10) NOT NULL DEFAULT nextval('maple.member_seq'::regclass),
+	mbr_email varchar(50) NOT NULL,
+	regdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	upddate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT pk_item_take PRIMARY KEY (caharacter_name, mbr_no, mbr_email),
+	CONSTRAINT fk_member_character_to_item_take FOREIGN KEY (caharacter_name, mbr_no, mbr_email) REFERENCES maple.member_character(caharacter_name, mbr_no, mbr_email)
+);
+
+CREATE TABLE maple.main_benner (
+	benner_seq numeric(10) NOT NULL,
+	benner_image varchar(100) NOT NULL,
+	benner_title varchar(100) NOT NULL,
+	benner_stardate varchar(8) NOT NULL,
+	benner_endate varchar(8) NOT NULL,
+	benner_type varchar(100) NOT NULL,
+	banner_restype varchar(5) NULL,
+	regdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	upddate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT pk_main_benner PRIMARY KEY (benner_seq)
+);
+
+CREATE TABLE maple.main_board (
+	boader_seq numeric(10) NOT NULL,
+	mbr_no numeric(10) NOT NULL DEFAULT nextval('maple.member_seq'::regclass),
+	mbr_email varchar(50) NOT NULL,
+	boader_title varchar(200) NOT NULL,
+	boader_contents varchar(20000) NULL,
+	boader_type varchar(20) NOT NULL,
+	boader_viewcnt numeric(100) NOT NULL DEFAULT 0,
+	regdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	upddate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT pk_main_board PRIMARY KEY (boader_seq, mbr_no, mbr_email),
+	CONSTRAINT fk_member_information_to_main_board FOREIGN KEY (mbr_no, mbr_email) REFERENCES maple.member_information(mbr_no, mbr_email)
+);
+
+CREATE TABLE maple."member" (
+	mbrno numeric(20) NOT NULL DEFAULT nextval('maple.member_seq'::regclass),
+	mbr_nm varchar(11) NOT NULL DEFAULT ''::character varying,
+	email varchar(30) NOT NULL DEFAULT ''::character varying,
+	"password" varchar(2000) NOT NULL DEFAULT ''::character varying,
+	phone varchar(11) NOT NULL DEFAULT ''::character varying,
+	birth varchar(11) NOT NULL DEFAULT ''::character varying,
+	mbr_grade varchar(11) NOT NULL DEFAULT ''::character varying,
+	mbr_point numeric(11) NOT NULL DEFAULT '0'::numeric,
+	address varchar(100) NOT NULL DEFAULT ''::character varying,
+	reg_date timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	upd_date timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	roles varchar(11) NOT NULL DEFAULT ''::character varying,
+	CONSTRAINT member_pkey PRIMARY KEY (mbrno)
+);
+
+CREATE TABLE maple.member_character (
+	caharacter_name varchar(15) NOT NULL,
+	mbr_no numeric(10) NOT NULL DEFAULT nextval('maple.member_seq'::regclass),
+	mbr_email varchar(50) NOT NULL,
+	aharacter_level numeric(3) NOT NULL,
+	aharacter_job varchar(10) NOT NULL,
+	chaa_server varchar(10) NOT NULL,
+	regdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	upddate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT pk_member_character PRIMARY KEY (caharacter_name, mbr_no, mbr_email),
+	CONSTRAINT fk_member_information_to_member_character FOREIGN KEY (mbr_no, mbr_email) REFERENCES maple.member_information(mbr_no, mbr_email)
+);
+
+CREATE TABLE maple.member_information (
+	mbr_no numeric(10) NOT NULL DEFAULT nextval('maple.member_seq'::regclass),
+	mbr_email varchar(50) NOT NULL,
+	mbr_name varchar(20) NOT NULL,
+	mbr_pass varchar(2000) NOT NULL,
+	mbr_phone varchar(20) NOT NULL,
+	mbr_born varchar(8) NOT NULL,
+	mbr_adress varchar(100) NOT NULL,
+	mbr_role varchar(50) NOT NULL,
+	mbr_zip varchar(20) NOT NULL,
+	regdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	upddate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT pk_member_information PRIMARY KEY (mbr_no, mbr_email)
+);
