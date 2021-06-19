@@ -1,5 +1,8 @@
 package com.maple.front.util;
 
+import lombok.Getter;
+
+@Getter
 public class SuccessResponse {
 
 	private Integer code;
