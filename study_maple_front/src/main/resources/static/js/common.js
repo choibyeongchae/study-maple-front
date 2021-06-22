@@ -16,4 +16,14 @@ class Commonjs {
 			return false
 		}
 	}
+	
+	isNumber(value) {
+		var patten = /[^0-9]/; //숫자만 허용
+		if (!patten.test(value)) {
+			return false
+		} else {
+			return true;
+		}
+		
+	}
 }

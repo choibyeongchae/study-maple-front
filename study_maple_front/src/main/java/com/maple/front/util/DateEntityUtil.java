@@ -4,6 +4,11 @@ import java.time.Instant;
 
 import javax.persistence.Column;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class DateEntityUtil {
 	
 	@Column(name = "regdate")
