@@ -142,7 +142,7 @@ CREATE TABLE maple.item_inven (
 );
 
 CREATE TABLE maple.item_master (
-	item_seq numeric(10) NOT NULL,
+	item_seq numeric(10) NOT NULL DEFAULT nextval('maple.item_seq'::regclass),
 	item_type varchar(30) NOT NULL,
 	item_name varchar(30) NOT NULL,
 	item_desc varchar(3000) NOT NULL,
@@ -186,8 +186,8 @@ CREATE TABLE maple.main_benner (
 );
 
 CREATE TABLE maple.main_board (
-	boader_seq numeric(10) NOT NULL,
-	mbr_no numeric(10) NOT NULL DEFAULT nextval('maple.member_seq'::regclass),
+	boader_seq numeric(10) NOT NULL DEFAULT nextval('maple.board_seq'::regclass),
+	mbr_no numeric(10) NOT NULL,
 	mbr_email varchar(50) NOT NULL,
 	boader_title varchar(200) NOT NULL,
 	boader_contents varchar(20000) NULL,
