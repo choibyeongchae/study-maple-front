@@ -155,7 +155,7 @@ td {
 		}
 		console.log(JSON.stringify(jsonObj));
 		 $.ajax({
-			url: "/member/core/mbrsignup",
+			url: "/member/core/signup",
 			type: "POST",
 			cache: false,
 			contentType: "application/json",

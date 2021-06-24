@@ -26,7 +26,7 @@ public class MemberController {
 	private MemberService Service;
 	
 	@ApiOperation("회원가입실행")
-	@PostMapping(value = "/mbrsignup")
+	@PostMapping(value = "/signup")
 	@Transactional(readOnly = false)
 	@ResponseBody
 	public SuccessResponse mbrSingUp(@RequestBody Map<String, Object> reqMap, HttpServletResponse response ) throws Exception{

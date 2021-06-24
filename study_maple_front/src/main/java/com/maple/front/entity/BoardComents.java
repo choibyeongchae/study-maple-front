@@ -11,18 +11,21 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.maple.front.entity.BoardComents;
 import com.maple.front.util.DateEntityUtil;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name="board_coments")
+@EqualsAndHashCode(callSuper=true)
 @Builder
 @Data
 @SequenceGenerator(name = "coment_seq", sequenceName = "coment_seq", initialValue = 1, allocationSize = 1)

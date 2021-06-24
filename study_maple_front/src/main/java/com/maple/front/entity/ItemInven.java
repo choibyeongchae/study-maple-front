@@ -17,12 +17,14 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name="item_inven")
+@EqualsAndHashCode(callSuper=true)
 @Builder
 @Data
 @SequenceGenerator(name = "iven_seq", sequenceName = "iven_seq", initialValue = 1, allocationSize = 1)

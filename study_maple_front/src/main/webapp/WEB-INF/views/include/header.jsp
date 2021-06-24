@@ -44,7 +44,7 @@
                         	<li><a href="#">1:1문의/도움말</a></li>
                         </li>
                         <li><a href="./blog.html">마이페이지</a></li>
-                        <li><a href="/signup">회원가입</a></li>
+                        <li><a href="/member/signup">회원가입</a></li>
                     </ul>
                 </nav>
                 <a href="login.jsp" class="primary-btn top-btn"> Login</a>
