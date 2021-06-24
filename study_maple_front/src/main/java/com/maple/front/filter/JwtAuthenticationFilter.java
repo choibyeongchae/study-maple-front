@@ -24,8 +24,8 @@ import com.maple.front.entity.Member;
 import com.maple.front.entity.MemberRefreshToken;
 import com.maple.front.repository.MemberRefreshRepository;
 import com.maple.front.util.ConstantUtil;
-import com.maple.front.util.PrincipalDetailUtil;
 import com.maple.front.util.StringUtil;
+import com.maple.front.util.UserDetailUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,6 +34,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	
 	private final AuthenticationManager authenticationManager;
 	private final MemberRefreshRepository memberRefreshRepository;
+	private final UserDetailUtil userDetailUtil;
 	
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
@@ -54,8 +55,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			// 회원정보get
 			PrincipalDetails principalDetails = (PrincipalDetails)authentication.getPrincipal();
 			
-			// static save
-			PrincipalDetailUtil.principalDetails = principalDetails;
+			// mbrInfo save
+			userDetailUtil.setPrincipalDetails(principalDetails);
 			return authentication;
 
 		} catch (IOException e) {

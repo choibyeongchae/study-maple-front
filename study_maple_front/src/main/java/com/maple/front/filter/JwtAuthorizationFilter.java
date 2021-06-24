@@ -25,18 +25,20 @@ import com.maple.front.entity.MemberRefreshToken;
 import com.maple.front.entity.QMember;
 import com.maple.front.repository.MemberRefreshRepository;
 import com.maple.front.util.ConstantUtil;
-import com.maple.front.util.PrincipalDetailUtil;
 import com.maple.front.util.StringUtil;
+import com.maple.front.util.UserDetailUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
 	private JPAQueryFactory queryFactory;
 	private MemberRefreshRepository memberRefreshRepository;
+	private UserDetailUtil userDetailUtil;
 	
-	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JPAQueryFactory queryFactory, MemberRefreshRepository memberRefreshRepository) {
+	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JPAQueryFactory queryFactory, MemberRefreshRepository memberRefreshRepository,UserDetailUtil userDetailUtil) {
 		super(authenticationManager);
 		this.queryFactory = queryFactory;
+		this.userDetailUtil = userDetailUtil;
 	}
 	
 	// 요청이 될때마다 실행
@@ -82,7 +84,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 			chain.doFilter(request, response);
 		} catch(TokenExpiredException e) {
 			// 액세스토큰이 유효기간지났을때 처리
-			PrincipalDetails principalDetail = PrincipalDetailUtil.principalDetails;
+			PrincipalDetails principalDetail = userDetailUtil.getPrincipalDetails();
 			if (!StringUtil.isEmpty(principalDetail)) {
 				Optional<MemberRefreshToken> mbrRefresh = memberRefreshRepository.findByEmail(principalDetail.getMember().getMbr_email());
 

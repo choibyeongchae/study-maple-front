@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 
+import com.maple.front.util.UserDetailUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @EnableCaching
@@ -24,6 +25,11 @@ public class StudyMapleFrontApplication {
 	@Bean
 	public JPAQueryFactory queryFactory() {
 		return new JPAQueryFactory(em);
+	}
+	
+	@Bean
+	public UserDetailUtil userDetailUtil() {
+		return new UserDetailUtil();
 	}
 
 }
