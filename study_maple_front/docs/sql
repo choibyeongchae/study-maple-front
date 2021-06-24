@@ -79,9 +79,9 @@ CREATE SEQUENCE maple.benner_seq
 	NO CYCLE;
 	
 	CREATE TABLE maple.board_coments (
-	coment_seq numeric(10) NOT NULL,
+	coment_seq numeric(10) NOT NULL default nextval('maple.coment_seq'::regclass),
 	boader_seq numeric(10) NOT NULL,
-	mbr_no numeric(10) NOT NULL DEFAULT nextval('maple.member_seq'::regclass),
+	mbr_no numeric(10) NOT NULL,
 	mbr_email varchar(50) NOT NULL,
 	com_contents varchar(200) NOT NULL,
 	regdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -90,9 +90,9 @@ CREATE SEQUENCE maple.benner_seq
 );
 
 CREATE TABLE maple.board_like (
-	history_seq numeric(10) NOT NULL,
+	history_seq numeric(10) NOT NULL default nextval('maple.history_seq'::regclass),
 	boader_seq numeric(10) NOT NULL,
-	mbr_no numeric(10) NOT NULL DEFAULT nextval('maple.member_seq'::regclass),
+	mbr_no numeric(10) NOT NULL,
 	mbr_email varchar(50) NOT NULL,
 	regdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	upddate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -113,14 +113,12 @@ CREATE TABLE maple.event_coment (
 );
 
 CREATE TABLE maple.event_master (
-	even_op numeric(10) NOT NULL,
+	even_op numeric(10) NOT NULL nextval('maple.even_op'::regclass),
 	even_code varchar(20) NOT NULL,
 	even_name varchar(20) NOT NULL,
-	even_stardate timestamp NOT NULL,
-	even_enddate timestamp NOT NULL,
-	even_title varchar(20) NOT NULL,
+	even_stardate varchar NOT NULL,
+	even_enddate varchar NOT NULL,
 	even_contents varchar(20) NOT NULL,
-	even_coment varchar(100) NULL,
 	even_viewcnt numeric(100) NOT NULL DEFAULT 0,
 	regdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	upddate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
