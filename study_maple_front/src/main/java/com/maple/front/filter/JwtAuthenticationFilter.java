@@ -116,9 +116,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 				
 			memberRefreshRepository.save(mbrRefreshToken);
 		}
-
+		
 		// member 객체 저장
-		request.setAttribute("userInfo", principalDetails.getMember());
+		if (principalDetails.getMember() != null) {
+			userDetailUtil.setPrincipalDetails(principalDetails);
+		}
 		
 	}
 	

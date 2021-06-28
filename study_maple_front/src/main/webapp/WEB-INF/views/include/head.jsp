@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,8 +39,10 @@
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script src="/static/js/common.js"></script>
 </head>
-	<script type="text/javascript">
+<c:set var="userInfo" value="${requestScope.userInfo}" />
+<script type="text/javascript">
 	var commonjs = new Commonjs();
+	console.log('${userInfo}');
 </script>
 <body>
 	

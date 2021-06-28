@@ -25,7 +25,7 @@ public class PrincipalDetailService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		QMember qMember = QMember.member;
 		Member member = queryFactory.selectFrom(qMember).where(qMember.mbr_email.eq(username)).fetchFirst();
-		if (member == null) {
+		if (member == null || !member.getMbr_role().equals("ROLE_USER")) {
 			Member loadUserByUsername = new Member();
 			loadUserByUsername.setMbr_email(username);
 			loadUserByUsername.setMbr_pass("");

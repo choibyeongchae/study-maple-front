@@ -81,6 +81,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 			}
 
+			PrincipalDetails userInfo = userDetailUtil.getPrincipalDetails();
+			if (userInfo != null) {
+				request.setAttribute("userInfo", userInfo.getMember());
+			}
+			
 			chain.doFilter(request, response);
 		} catch(TokenExpiredException e) {
 			// 액세스토큰이 유효기간지났을때 처리
@@ -163,6 +168,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 					
 					SecurityContextHolder.getContext().setAuthentication(authentication);
 				}
+			}
+			
+			PrincipalDetails userInfo = userDetailUtil.getPrincipalDetails();
+			if (userInfo != null) {
+				request.setAttribute("userInfo", userInfo.getMember());
 			}
 
 			chain.doFilter(request, response);
