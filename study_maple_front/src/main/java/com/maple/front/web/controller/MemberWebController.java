@@ -16,4 +16,10 @@ public class MemberWebController {
 	public String signup(Model model) {
 		return "/member/signup";
 	}
+	
+	@ApiOperation("로그인 화면")
+	@GetMapping("/login")
+	public String login(Model model) {
+		return "/member/login";
+	}
 }

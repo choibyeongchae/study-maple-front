@@ -16,8 +16,8 @@
     <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,500,600,700,800,900&display=swap"
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap" rel="stylesheet">
-
-
+       <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/login.css" type="text/css">
     <!-- Css Styles -->
 	
 
@@ -38,6 +38,8 @@
     <script src="/static/js/main.js"></script>
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script src="/static/js/common.js"></script>
+    <script src="https://kit.fontawesome.com/53a8c415f1.js" crossorigin="anonymous"></script>
+<title>Insert title here</title>
 </head>
 <c:set var="userInfo" value="${requestScope.userInfo}" />
 <script type="text/javascript">

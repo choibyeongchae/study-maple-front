@@ -1,31 +1,38 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
- <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/53a8c415f1.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="./login.css">
-     <link rel="stylesheet" href="/static/css/login.css" type="text/css">
+<jsp:include page="../include/head.jsp"/>
 <title>Insert title here</title>
 </head>
 <script type="text/javascript">
 
 $(function() {
 	if (!commonjs.isEmpty('${userInfo}')) {
-		location.href="/";
+		location.href="/home";
 	}
 })
 
 function doLogin() {
-	var host =  window.location.hostname;
 	
 	var jsonObj = new Object();
-	jsonObj.email = $("input[name='email']").val();
-	jsonObj.pass = $("input[name='password']").val();
+	
+	if(commonjs.isEmpty($("input[name=email]").val())) {
+		alert("이메일을 입력 해 주세요");
+		$("input[name=email]").focus();
+		return;
+	}
+	
+	if(commonjs.isEmpty($("input[name=password]").val())) {
+		alert("패스워드를 입력 해 주세요");
+		$("input[name=password]").focus();
+		return;
+	}
+	
+	jsonObj.mbr_email = $("input[name='email']").val();
+	jsonObj.mbr_pass = $("input[name='password']").val();
 	
 	$.ajax({
 		type : "POST",
@@ -34,11 +41,11 @@ function doLogin() {
 		cache : false,
 		contentType : 'application/json',
 		aync: false,
-		success : function(response,textStatus,request) {
-			location.href="/";
+		success : function(data) {
+			location.href="/home";
 		},
-		error : function(jqXHR, status, e) {
-			alert("로그인에 실패하였습니다.");
+		error : function(error) {
+			alert("아이디 혹은 비밀번호를 확인 해 주세요");
 		}
 	});
 }
