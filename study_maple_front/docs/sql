@@ -171,13 +171,14 @@ CREATE TABLE maple.item_take (
 );
 
 CREATE TABLE maple.main_benner (
-	benner_seq numeric(10) NOT NULL,
-	benner_image varchar(100) NOT NULL,
+	benner_seq numeric(10) NOT NULL DEFAULT nextval('maple.benner_seq'::regclass),
+	benner_image varchar(1000) NOT NULL,
+	benner_imagenm varchar(200) NOT NULL,
 	benner_title varchar(100) NOT NULL,
 	benner_stardate varchar(8) NOT NULL,
 	benner_endate varchar(8) NOT NULL,
 	benner_type varchar(100) NOT NULL,
-	banner_restype varchar(5) NULL,
+	banner_restype varchar(10) NULL,
 	regdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	upddate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT pk_main_benner PRIMARY KEY (benner_seq)
