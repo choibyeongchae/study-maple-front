@@ -21,10 +21,10 @@ public class DateEntityUtil {
 	
 	@Column(name = "regdate")
 	@CreatedDate
-	private Instant regdate;
+	private Instant createDate;
 	
 	@Column(name = "upddate")
 	@LastModifiedDate
-	private Instant upddate;
+	private Instant updateDate;
 	
 }
